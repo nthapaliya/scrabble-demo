@@ -4,8 +4,8 @@ Demonstration of a Scrabble game written in java
 
 It compiles, and even works! But it's not the best sample of my code.
 
-$ make
-$ java dst/Scrabble.class
+`$ make
+`$ java dst/Scrabble.class
 
 I also have a pre-compiled .jar in dst/
 
@@ -15,5 +15,5 @@ I realize that the code is very hard to read, as (past me) did not care about do
 
 - Documentation: Lots of it. It should be informative but concise.
 - Composability: In a program like this, there should be clear separation of concerns. The searching algorithm should be separate from the ui-logic. As I have written it, it's all a mish mash.
-- Too many side effects: As the code is now, too many functions have side effects. A lack of documentation makes it difficult to find out what each function changes, and in general, I find "purer" functions to be easier to write and understand.
+- Side effects: As the code is now, too many functions have side effects. A lack of documentation makes it difficult to find out what each function changes, and in general, I find "purer" functions to be easier to write and understand.
 - Global variables: There are too many global variables. Coupled with the previous point, it's hard to reason the flow of the program.
