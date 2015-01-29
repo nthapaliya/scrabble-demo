@@ -5,6 +5,7 @@ Demonstration of a Scrabble game written in java
 It compiles, and even works! But it's not the best sample of my code.
 
 `$ make`
+
 `$ java dst/Scrabble.class`
 
 I also have a pre-compiled .jar in dst/
