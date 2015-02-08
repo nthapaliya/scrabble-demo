@@ -4,22 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-class ComPlayer {
+class ComPlayer extends Player {
 
-ArrayList<String>  comPieces;
-// public static Search search;
-// Tile[][] board, transBoard;
-// ButtonPanel buttonPanel;
-ArrayList<String> legalWords;
-int bestScore;
-String bestWord;
+    int bestScore;
+    String bestWord;
 
 ComPlayer() {
-        // this.buttonPanel = buttonPanel;
-        //comPlayer = this;
-        // search = new Search();
-
-        comPieces = new ArrayList<String>();
+    super("Computer");
 
         // while (LetterBag.getSize() > 0 && comPieces.size() < 7) {
         //         String piece = LetterBag.drawRandom();

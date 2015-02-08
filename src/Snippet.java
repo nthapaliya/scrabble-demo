@@ -1,21 +1,20 @@
 import java.util.ArrayList;
-import java.util.Collections;
-
-import wordsearch.Dawg;
-
+import wordsearch.Game;
 class Snippet {
 
     public static void main(String[] args){
-        ArrayList<String> l = ReadFile(".../resources/enable1.txt");
-        Dawg dg = new Dawg(l);
+//        ArrayList<String> l = ReadFile(".../resources/enable1.txt");
+//        Dawg dg = new Dawg(l);
+//
+//        for (String word: l) {
+//          if (!dg.Contains(word)) System.out.println("Something went wrong");
+//        }
+//        System.out.println("ok");
+    Game game = new Game("p1", "p2");
 
-        for (String word: l) {
-          if (!dg.Contains(word)) System.out.println("Something went wrong");
-        }
-        System.out.println("ok");
-}
+    }
 
-public static ArrayList<String> ReadFile(String filename){
+    public static ArrayList<String> ReadFile(String filename){
         ArrayList<String> l = new ArrayList<String>();
 
         java.util.Scanner inpt;

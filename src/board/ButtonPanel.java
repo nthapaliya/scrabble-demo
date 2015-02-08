@@ -17,14 +17,12 @@ class ButtonPanel extends JPanel implements ActionListener {
     private Tile[][] board;
     private Tile[][] transBoard;
     private JButton goButton;
-    private JButton loseButton;
-//
-Dawg dictionary;
+    Dawg dictionary;
 // ComPlayer comPlayer;
 
     ButtonPanel() {
         goButton = new JButton("Go!");
-        loseButton = new JButton("Lose Turn");
+        JButton loseButton = new JButton("Lose Turn");
 
         add(goButton);
         add(loseButton);
