@@ -1,2 +1,0 @@
-Manifest-version: 0.1
-Main-class: Scrabble
