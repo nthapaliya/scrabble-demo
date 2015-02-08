@@ -6,7 +6,7 @@ import wordsearch.Dawg;
 class Snippet {
 
     public static void main(String[] args){
-        ArrayList<String> l = ReadFile();
+        ArrayList<String> l = ReadFile(".../resources/enable1.txt");
         Dawg dg = new Dawg(l);
 
         for (String word: l) {
@@ -15,14 +15,14 @@ class Snippet {
         System.out.println("ok");
 }
 
-public static ArrayList<String> ReadFile(){
+public static ArrayList<String> ReadFile(String filename){
         ArrayList<String> l = new ArrayList<String>();
 
         java.util.Scanner inpt;
         java.io.FileReader r;
 
         try {
-                r = new java.io.FileReader("../resources/enable1.txt");
+                r = new java.io.FileReader(filename);
                 inpt = new java.util.Scanner(r);
                 while (inpt.hasNext()) {
                         l.add(inpt.next());

@@ -8,7 +8,7 @@ public class BoardLayout extends JPanel {
     private JPanel pieceHolder;
     private JPanel sidePanel;
 
-    BoardLayout() {
+    public BoardLayout() {
         setBackground(Color.WHITE);
         JPanel board = new ScrabbleBoard(this);
         sp = new SidePanel();

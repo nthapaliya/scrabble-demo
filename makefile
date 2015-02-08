@@ -1,5 +1,10 @@
-all:
-	javac src/board/*.java -d dst/
-	javac src/wordsearch/*.java -d dst/
-	javac src/*.java -d dst/
-	
+all: scrabble
+
+scrabble: wordsearch board
+	javac -cp dst/ src/Scrabble.java -d dst/
+
+board:
+	javac -cp dst/ src/board/*.java -d dst/
+
+wordsearch:
+	javac -cp dst/ src/wordsearch/*.java -d dst/

@@ -5,17 +5,21 @@ import java.util.Collections;
 
 public class LetterBag {
     private static ArrayList<String> letters;
+    private static int[] letterArray;
 
     LetterBag() {
         letters = new ArrayList<String>();
-        create();
-    }
+        letterArray = new int[26];
 
-    private static void create() {
+//      Now creates a new 'bag
         for (Piece p : Piece.values()) {
-            for (int i = 0; i < p.getDist(); i++) letters.add(p.toString());
+            for (int i = 0; i < p.Dist(); i++) {
+                letters.add(p.toString());
+                letterArray[p.Letter()-'a']++;
+            }
         }
     }
+
 
     public static String drawRandom() {
         Collections.shuffle(letters);

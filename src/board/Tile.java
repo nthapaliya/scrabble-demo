@@ -21,10 +21,7 @@ public class Tile extends JPanel {
     private Color color;
     private Color col;         // don't know
     private Tile currentTile;
-    Tile north;
-    Tile south;
-    Tile east;
-    Tile west;
+
     private boolean hover;
     boolean thisClicked;
 
@@ -34,7 +31,7 @@ public class Tile extends JPanel {
         tileRow = row;
         tileCol = col;
 
-        tileType = TileType.getTileType(row, col);
+        tileType = TileType.GetType(row, col);
         currentTile = this;
 
         setBackground(Color.WHITE);
@@ -138,10 +135,10 @@ public class Tile extends JPanel {
         repaint();
     }
 
-    public void placeTile(String s) {
+    public void placeTile(char c) {
 
-        tileLetter = s;
-        tileValue = Piece.getPiece(s).getValue();
+        tileLetter = String.valueOf(c);
+        tileValue = Piece.getPiece(c).Value();
         thisClicked = false;
         //permanent = false;
         repaint();
@@ -183,11 +180,6 @@ public class Tile extends JPanel {
 
         public void mousePressed(MouseEvent e) {   //truth table approach here
             if (!permanent) {
-                boolean TO, PS, TC;
-                TO = tileOccupied();
-                PS = pieceSelected();
-                TC = tileClicked();
-
                 if (tileOccupied() && pieceSelected() && tileClicked()) {
                     System.out.println("Case 1");
                 } else if (!tileOccupied() && pieceSelected() && !tileClicked()) {

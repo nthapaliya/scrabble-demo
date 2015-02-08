@@ -29,11 +29,12 @@ public enum Piece {
     Z('z', 10, 1);
 
     private int value, distribution;
+    private char letter;
 
     private Piece(char l, int v, int d) {
-        char letter = l;
-        this.value = v;
-        this.distribution = d;
+        letter = l;
+        value = v;
+        distribution = d;
     }
 
     public static Piece getPiece(char c) {
@@ -42,6 +43,8 @@ public enum Piece {
         }
         return null;
     }
+
+    public char Letter() {return letter;}
 
     public int Value() {
         return value;

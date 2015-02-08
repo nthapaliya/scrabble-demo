@@ -1,5 +1,8 @@
 package board;
 
+import wordsearch.Dawg;
+import wordsearch.Utils;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,7 +18,8 @@ class ButtonPanel extends JPanel implements ActionListener {
     private Tile[][] transBoard;
     private JButton goButton;
     private JButton loseButton;
-// Search search;
+//
+Dawg dictionary;
 // ComPlayer comPlayer;
 
     ButtonPanel() {
@@ -29,7 +33,8 @@ class ButtonPanel extends JPanel implements ActionListener {
         loseButton.addActionListener(this);
 
         // comPlayer = new ComPlayer(this);
-        // search = ComPlayer.search;
+        ArrayList<String> list = new Utils().wordlist;
+        dictionary = new Dawg(list);
         board = ScrabbleBoard.tiles;
         transBoard = transpose(board);
     }
@@ -192,7 +197,7 @@ class ButtonPanel extends JPanel implements ActionListener {
             Scanner scanner = new Scanner(s);
             String word = scanner.next();
             if (word.length() > 1)
-                spellingGood = spellingGood && search.contains(word);
+                spellingGood = spellingGood && dictionary.Contains(word);
         }
         return spellingGood;
     }
@@ -234,9 +239,9 @@ class ButtonPanel extends JPanel implements ActionListener {
         return total;
     }
 
-    void computerTurn() {
-        comPlayer.compTurn();
-    }
+    // void computerTurn() {
+    //     comPlayer.compTurn();
+    // }
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(goButton)) {
@@ -248,7 +253,7 @@ class ButtonPanel extends JPanel implements ActionListener {
 
                 makePermanent();
                 drawNewPieces();
-                computerTurn();
+//                computerTurn();
             } else if (!onCenter())
                 JOptionPane.showMessageDialog
                         (ScrabbleBoard.scrabbleBoard,
@@ -287,7 +292,7 @@ class ButtonPanel extends JPanel implements ActionListener {
                 if (good) {
                     returnPiecesToBag();
                     if (LetterBag.getSize() > 0) drawNewPieces();
-                    computerTurn();
+//                    computerTurn();
                 }
             }
 

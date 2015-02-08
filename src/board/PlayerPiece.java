@@ -26,7 +26,7 @@ public class PlayerPiece extends JPanel {
         setBackground(Color.WHITE);
 
         text = piece.toString();
-        value = piece.getValue();
+        value = piece.Value();
 
         addMouseListener(new HoverListener());
     }
