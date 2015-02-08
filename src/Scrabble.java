@@ -1,5 +1,7 @@
 // Niraj Thapaliya, 2015
 
+import board.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;

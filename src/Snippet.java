@@ -1,17 +1,16 @@
 import java.util.ArrayList;
 import java.util.Collections;
 
+import wordsearch.Dawg;
+
 class Snippet {
 
-public static void main(String[] args){
-        Dawg dg = new Dawg();
+    public static void main(String[] args){
         ArrayList<String> l = ReadFile();
-        dg.AddFromAlphabetic(l);
+        Dawg dg = new Dawg(l);
 
         for (String word: l) {
-          if (!dg.contains(word)) {
-            System.out.println("Something went wrong");
-          }
+          if (!dg.Contains(word)) System.out.println("Something went wrong");
         }
         System.out.println("ok");
 }
