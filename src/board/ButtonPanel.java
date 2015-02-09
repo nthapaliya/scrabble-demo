@@ -20,6 +20,7 @@ class ButtonPanel extends JPanel implements ActionListener {
     private JButton goButton;
     Dawg dictionary;
     Game game;
+    char[][] currentBoard;
 // ComPlayer comPlayer;
 
     ButtonPanel(Game game) {
@@ -36,8 +37,9 @@ class ButtonPanel extends JPanel implements ActionListener {
         // comPlayer = new ComPlayer(this);
         ArrayList<String> list = new Utils().wordlist;
         dictionary = new Dawg(list);
-        board = Board.board.tiles;
+        board = MainWindow.tiles;
         transBoard = transpose(board);
+        currentBoard = new char[15][15];
     }
 
     Tile[][] transpose(Tile[][] board) {
@@ -81,7 +83,7 @@ class ButtonPanel extends JPanel implements ActionListener {
     }
 
     boolean onCenter() {
-        return (Board.board.tiles[7][7].tileLetter != null);
+        return (MainWindow.tiles[7][7].tileLetter != null);
     }
 
     ArrayList<String> getWords(Tile[][] theBoard) {
@@ -203,9 +205,9 @@ class ButtonPanel extends JPanel implements ActionListener {
         return spellingGood;
     }
 
-    boolean checkValid() {
-        return checkSingleLine() && checkAdjacent() && checkSpelling() && onCenter();
-    }
+//    boolean checkValid() {
+//        return checkSingleLine() && checkAdjacent() && checkSpelling() && onCenter();
+//    }
 
     int getPoints() {
         lastBest = "";
@@ -246,8 +248,8 @@ class ButtonPanel extends JPanel implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(goButton)) {
-
-            if (checkValid()) {
+            String errMsg = game.ErrMsg(currentBoard);
+            if (errMsg == null) {
                 additional = getPoints();
                 userScore = userScore + additional;
                 ScorePanel.scorePanel.repaint();
@@ -255,26 +257,29 @@ class ButtonPanel extends JPanel implements ActionListener {
                 makePermanent();
                 drawNewPieces();
 //                computerTurn();
-            } else if (!onCenter())
-                JOptionPane.showMessageDialog
-                        (Board.board,
-                                "First word should lie across the center tile");
-            else if (!checkSpelling())
-                JOptionPane.showMessageDialog
-                        (Board.board,
-                                "Use valid words and make sure all your combinations are valid");
-            else if (!checkSingleLine())
-                JOptionPane.showMessageDialog
-                        (Board.board,
-                                "Main word should be a single unbroken line");
-            else
-                JOptionPane.showMessageDialog
-                        (Board.board,
-                                "Place letters adjacent to placed tiles");
+            } else {
+                JOptionPane.showMessageDialog(MainWindow.mw, errMsg);
+            }
+//            else if (!onCenter())
+//                JOptionPane.showMessageDialog
+//                        (MainWindow.mw,
+//                                "First word should lie across the center tile");
+//            else if (!checkSpelling())
+//                JOptionPane.showMessageDialog
+//                        (MainWindow.mw,
+//                                "Use valid words and make sure all your combinations are valid");
+//            else if (!checkSingleLine())
+//                JOptionPane.showMessageDialog
+//                        (MainWindow.mw,
+//                                "Main word should be a single unbroken line");
+//            else
+//                JOptionPane.showMessageDialog
+//                        (MainWindow.mw,
+//                                "Place letters adjacent to placed tiles");
         } else {
-            String[] options = {"Yes definitely", "No, not really"};
+            String[] options = {"Yes", "No"};
             int result = JOptionPane.showOptionDialog
-                    (Board.board, "Are you sure? Absolutely sure?",
+                    (MainWindow.mw, "Are you sure? Absolutely sure?",
                             "Skipping a step? Really?", JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
             boolean good = true;
@@ -283,7 +288,7 @@ class ButtonPanel extends JPanel implements ActionListener {
                 for (int i = 0; i < 7; i++) {
                     if (PieceHolder.pieceArray[i].isEmpty) {
                         JOptionPane.showMessageDialog
-                                (Board.board,
+                                (MainWindow.mw,
                                         "Place all pieces back in piece holder please");
                         good = false;
                         break;

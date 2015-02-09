@@ -20,7 +20,6 @@ class PieceHolder extends JPanel {
         for (int i = 0; i < 7; i++) {
             char c = game.DrawRandom();
             pieces[i] = "" + c;
-            System.out.printf("char c is %c\n",c);
             pieceArray[i] = new PlayerPiece(Piece.getPiece(c));
             add(pieceArray[i]);
         }

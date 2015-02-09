@@ -8,3 +8,9 @@ board:
 
 wordsearch:
 	javac -cp dst/ src/wordsearch/*.java -d dst/
+
+clean:
+	rm dst/board/*.class
+	rm dst/wordsearch/*.class
+	rm dst/*.class
+	

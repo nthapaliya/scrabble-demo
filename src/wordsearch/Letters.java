@@ -1,6 +1,5 @@
 package wordsearch;
 
-import java.util.Arrays;
 import java.util.Random;
 /**
  * Created by nirajthapaliya on 2/8/15.
@@ -27,16 +26,14 @@ public class Letters {
     // while I hate this, Sum() conveniently updates the local histogram as well.
     public int Sum(){
         int sum = 0;
-        for (int i = 0; i < bag.length; i++){
+        for (int i = 0; i < bag.length; i++) {
             sum += bag[i];
-            if (bag[i] > 0) {
-                histogram[i] = sum;
-            } else {
-                histogram[i] = 0;
-            }
+            histogram[i] = sum;
         }
+
         return sum;
     }
+
     public char DrawRandom() {
         int sum = Sum();
         if (sum < 1){
@@ -50,11 +47,6 @@ public class Letters {
         while (histogram[index] <= pick){
             index++;
         }
-//        System.out.printf("sum=%d, pick=%d, index=%d, \n", sum,pick,index);
-//        System.out.println(Arrays.toString(bag));
-//        System.out.println(Arrays.toString(histogram));
-//        System.out.println();
-
         bag[index]--;
         return (char) (index+'a');
     }
