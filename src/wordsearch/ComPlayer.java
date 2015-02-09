@@ -43,7 +43,7 @@ public void compTurn(){
         //         }
         //         System.out.println();
         //         JOptionPane.showMessageDialog
-        //                 (ScrabbleBoard.scrabbleBoard,
+        //                 (Board.board,
         //                 "Computer decided to lose turn");
         // }
 }
@@ -114,7 +114,7 @@ void putWords (String s, int x, int y) { /////////////////////////
         // }
         //
         //
-        // ScrabbleBoard.clearBoard();
+        // Board.clearBoard();
 }
 
 // void LegalMove(String s, int x, int y, Tile[][] theBoard) {

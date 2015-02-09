@@ -3,9 +3,6 @@
 import board.*;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.border.*;
 
 class Scrabble extends JFrame {
 
@@ -13,7 +10,7 @@ Scrabble(){
         super("Scrabble 0.1a");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        setContentPane(new BoardLayout());
+        setContentPane(new MainWindow());
         pack();
         setVisible(true);
 }

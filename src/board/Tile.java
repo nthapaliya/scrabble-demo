@@ -11,8 +11,6 @@ public class Tile extends JPanel {
     public static Tile boardClicked;
     private final int TILE_SIZE = 45;
     public boolean permanent;
-    private int tileRow;
-    private int tileCol;
     public String tileLetter;
     public int tileValue;
     TileType tileType;
@@ -28,9 +26,6 @@ public class Tile extends JPanel {
 
     Tile(int row, int col) {
         permanent = false;
-        tileRow = row;
-        tileCol = col;
-
         tileType = TileType.GetType(row, col);
         currentTile = this;
 

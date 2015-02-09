@@ -15,5 +15,6 @@ public class Player {
         board = new char[15][15];
         this.name = name;
     }
-    
+
+    int Score() { return score;}
 }

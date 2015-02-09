@@ -39,7 +39,7 @@ public enum Piece {
 
     public static Piece getPiece(char c) {
         for (Piece p : Piece.values()) {
-            if (p.value == c) return p;
+            if (p.letter == c) return p;
         }
         return null;
     }

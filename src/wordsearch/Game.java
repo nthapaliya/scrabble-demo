@@ -4,15 +4,23 @@ package wordsearch;
  * Created by nirajthapaliya on 2/8/15.
  */
 public class Game {
-    public char[][] Board;
-    public Player Player1;
-    public Player Player2;
-    public Letters LetterBag;
+    char[][] boardState;
+    Player player1;
+    Player player2;
+    Letters letterBag;
 
     public Game(String playerName, String playerName2) {
-        Player1 = new Player(playerName);
-        Player2 = new Player(playerName);
-        Board = new char[15][15];
-        LetterBag = new Letters();
+        player1 = new Player(playerName);
+        player2 = new Player(playerName);
+        boardState = new char[15][15];
+        letterBag = new Letters();
     }
+
+    public int remainingLetters() {
+        return letterBag.Sum();
+    }
+    public int Player1Score() { return player1.Score(); }
+    public int Player2Score() { return player2.Score(); }
+    public char DrawRandom() { return letterBag.DrawRandom();}
+    public void AddToBag(char c) { letterBag.Add(c); }
 }

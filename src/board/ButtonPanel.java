@@ -2,6 +2,7 @@ package board;
 
 import wordsearch.Dawg;
 import wordsearch.Utils;
+import wordsearch.Game;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,9 +19,11 @@ class ButtonPanel extends JPanel implements ActionListener {
     private Tile[][] transBoard;
     private JButton goButton;
     Dawg dictionary;
+    Game game;
 // ComPlayer comPlayer;
 
-    ButtonPanel() {
+    ButtonPanel(Game game) {
+        this.game = game;
         goButton = new JButton("Go!");
         JButton loseButton = new JButton("Lose Turn");
 
@@ -33,7 +36,7 @@ class ButtonPanel extends JPanel implements ActionListener {
         // comPlayer = new ComPlayer(this);
         ArrayList<String> list = new Utils().wordlist;
         dictionary = new Dawg(list);
-        board = ScrabbleBoard.tiles;
+        board = Board.board.tiles;
         transBoard = transpose(board);
     }
 
@@ -52,7 +55,7 @@ class ButtonPanel extends JPanel implements ActionListener {
     void returnPiecesToBag() {
         for (int i = 0; i < 7; i++) {
             if (!PieceHolder.pieceArray[i].isEmpty) {
-                LetterBag.addToBag(PieceHolder.pieces[i]);
+                game.AddToBag(PieceHolder.pieces[i].charAt(0));
             }
             PieceHolder.pieceArray[i].isEmpty = true;
         }
@@ -61,12 +64,12 @@ class ButtonPanel extends JPanel implements ActionListener {
     void drawNewPieces() {
         PlayerPiece.selected = null;
         int i = 0;
-        while (LetterBag.getSize() > 0 && i < 7) {
+        while (game.remainingLetters() > 0 && i < 7) {
             if (PieceHolder.pieceArray[i].isEmpty) {
-                PieceHolder.pieces[i] = LetterBag.drawRandom();
+                PieceHolder.pieces[i] = ""+game.DrawRandom();
 
                 PieceHolder.pieceArray[i].value =
-                        LetterBag.getPiece(PieceHolder.pieces[i]).Value();
+                        Piece.getPiece(PieceHolder.pieces[i].charAt(0)).Value();
                 PieceHolder.pieceArray[i].text = PieceHolder.pieces[i];
                 PieceHolder.pieceArray[i].isEmpty = false;
                 PieceHolder.pieceArray[i].color = Color.YELLOW;
@@ -78,7 +81,7 @@ class ButtonPanel extends JPanel implements ActionListener {
     }
 
     boolean onCenter() {
-        return (ScrabbleBoard.tiles[7][7].tileLetter != null);
+        return (Board.board.tiles[7][7].tileLetter != null);
     }
 
     ArrayList<String> getWords(Tile[][] theBoard) {
@@ -254,24 +257,24 @@ class ButtonPanel extends JPanel implements ActionListener {
 //                computerTurn();
             } else if (!onCenter())
                 JOptionPane.showMessageDialog
-                        (ScrabbleBoard.scrabbleBoard,
+                        (Board.board,
                                 "First word should lie across the center tile");
             else if (!checkSpelling())
                 JOptionPane.showMessageDialog
-                        (ScrabbleBoard.scrabbleBoard,
+                        (Board.board,
                                 "Use valid words and make sure all your combinations are valid");
             else if (!checkSingleLine())
                 JOptionPane.showMessageDialog
-                        (ScrabbleBoard.scrabbleBoard,
+                        (Board.board,
                                 "Main word should be a single unbroken line");
             else
                 JOptionPane.showMessageDialog
-                        (ScrabbleBoard.scrabbleBoard,
+                        (Board.board,
                                 "Place letters adjacent to placed tiles");
         } else {
             String[] options = {"Yes definitely", "No, not really"};
             int result = JOptionPane.showOptionDialog
-                    (ScrabbleBoard.scrabbleBoard, "Are you sure? Absolutely sure?",
+                    (Board.board, "Are you sure? Absolutely sure?",
                             "Skipping a step? Really?", JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
             boolean good = true;
@@ -280,7 +283,7 @@ class ButtonPanel extends JPanel implements ActionListener {
                 for (int i = 0; i < 7; i++) {
                     if (PieceHolder.pieceArray[i].isEmpty) {
                         JOptionPane.showMessageDialog
-                                (ScrabbleBoard.scrabbleBoard,
+                                (Board.board,
                                         "Place all pieces back in piece holder please");
                         good = false;
                         break;
@@ -289,7 +292,7 @@ class ButtonPanel extends JPanel implements ActionListener {
                 }
                 if (good) {
                     returnPiecesToBag();
-                    if (LetterBag.getSize() > 0) drawNewPieces();
+                    if (game.remainingLetters() > 0) drawNewPieces();
 //                    computerTurn();
                 }
             }

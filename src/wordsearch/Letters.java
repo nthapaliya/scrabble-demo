@@ -1,12 +1,18 @@
 package wordsearch;
 
+import java.util.Arrays;
+import java.util.Random;
 /**
  * Created by nirajthapaliya on 2/8/15.
  */
 public class Letters {
-    int[] Bag;
-    Letters() {
-        Bag = new int[]{
+    int[] bag;
+    int [] histogram;
+    Random random;
+
+    public Letters() {
+        random = new Random();
+        bag = new int[]{
                 9, 2, 2, 4, 12,
                 2, 3, 2, 9, 1,
                 1, 4, 2, 6, 8,
@@ -14,13 +20,46 @@ public class Letters {
                 4, 2, 2, 1, 2,
                 1,
         };
-//        System.out.println(Sum(Bag)); // Should be 98
+        histogram = new int[bag.length];
+//      Sum();
     }
-    int Sum(int[] bag){
+
+    // while I hate this, Sum() conveniently updates the local histogram as well.
+    public int Sum(){
         int sum = 0;
-        for (int num: bag){
-            sum+=num;
+        for (int i = 0; i < bag.length; i++){
+            sum += bag[i];
+            if (bag[i] > 0) {
+                histogram[i] = sum;
+            } else {
+                histogram[i] = 0;
+            }
         }
         return sum;
+    }
+    public char DrawRandom() {
+        int sum = Sum();
+        if (sum < 1){
+            return '!';
+        }
+
+        // pick a random number from [0..n] inclusive
+        int pick = random.nextInt(sum);
+        int index = 0;
+
+        while (histogram[index] <= pick){
+            index++;
+        }
+//        System.out.printf("sum=%d, pick=%d, index=%d, \n", sum,pick,index);
+//        System.out.println(Arrays.toString(bag));
+//        System.out.println(Arrays.toString(histogram));
+//        System.out.println();
+
+        bag[index]--;
+        return (char) (index+'a');
+    }
+
+    void Add(char c) {
+        bag[c-'a']++;
     }
 }

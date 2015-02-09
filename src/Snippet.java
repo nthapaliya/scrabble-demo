@@ -11,7 +11,10 @@ class Snippet {
 //        }
 //        System.out.println("ok");
     Game game = new Game("p1", "p2");
-
+        char c = 'a';
+    while (c != '!') {
+        c = game.DrawRandom();
+    }
     }
 
     public static ArrayList<String> ReadFile(String filename){
