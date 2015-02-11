@@ -1,8 +1,9 @@
 package board;
 
+import wordsearch.Game;
+
 import javax.swing.*;
 import java.awt.*;
-import wordsearch.Game;
 
 public class MainWindow extends JPanel {
     public static Tile[][] tiles;

@@ -1,16 +1,14 @@
 package board;
 
 import wordsearch.Dawg;
-import wordsearch.Utils;
 import wordsearch.Game;
+import wordsearch.Utils;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Scanner;
-import wordsearch.Letters;
 class ButtonPanel extends JPanel implements ActionListener {
 
     public static int additional, userScore, compScore;
@@ -100,8 +98,8 @@ class ButtonPanel extends JPanel implements ActionListener {
             boolean isAdjacent = false;
 
             for (int j = 0; j < 15; j++) {
-                if (theBoard[i][j].tileLetter != null) {
-                    s = s + theBoard[i][j].tileLetter;
+                if (theBoard[i][j].tileText != null) {
+                    s = s + theBoard[i][j].tileText;
                     isNew = isNew || !theBoard[i][j].permanent;
                     isAdjacent = isAdjacent || isAdjacent(i, j, theBoard);
                 } else if (isNew) {
@@ -109,7 +107,7 @@ class ButtonPanel extends JPanel implements ActionListener {
                     list.add(s + " " + isAdjacent + " " + i + " " + (j - 1));
                     s = "";
                     isNew = false;
-                } else if (j != 0 && theBoard[i][j - 1].tileLetter != null) {
+                } else if (j != 0 && theBoard[i][j - 1].tileText != null) {
                     s = "";
                 } else s = s + " ";
                 y = j - 1;
@@ -159,7 +157,7 @@ class ButtonPanel extends JPanel implements ActionListener {
     void makePermanent() {
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
-                if (board[i][j].tileLetter != null) {
+                if (board[i][j].tileText != null) {
                     board[i][j].permanent = true;
                     board[i][j].repaint();
                 }

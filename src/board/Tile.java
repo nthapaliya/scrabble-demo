@@ -1,5 +1,6 @@
 package board;
 
+import wordsearch.Letters;
 import wordsearch.Tiles;
 
 import javax.swing.*;
@@ -9,195 +10,156 @@ import java.awt.event.MouseEvent;
 import java.util.Scanner;
 
 public class Tile extends JPanel {
+    public static Tile selected;
 
-    public static Tile boardClicked;
-    private final int TILE_SIZE = 45;
-    boolean permanent, thisClicked, hover;
-    public int tileValue;
+    final int TILE_SIZE = 45;
     Tiles tile;
+    boolean permanent, empty, clicked;
     char c;
-    String tileLetter, text1, text2; // "DOUBLE" "WORD" etc
-    private Color color, col;   // don't know
+    String tileText;
+    int tileValue;
+
+    String text1, text2;
+    Color color;
+
+    HoverListener hl;
 
     Tile(int row, int col) {
         permanent = false;
+        empty = true;
         tile = Tiles.GetType(row, col);
-
         setBackground(Color.WHITE);
         setPreferredSize(new Dimension(TILE_SIZE, TILE_SIZE));
+        setColorsToDefaultState(); // sets the colors to their natural state
         addMouseListener(new HoverListener());
+        getTileText();
     }
 
     void getTileText() {
-        Scanner s = new Scanner(tile.toString());
-        text1 = s.next();
-        if (s.hasNext()) text2 = s.next();
+        if (text1 == null && text2 == null) {
+            Scanner s = new Scanner(tile.toString());
+            text1 = s.next();
+            if (s.hasNext()) text2 = s.next();
+        }
+    }
+
+    void setColorsToDefaultState() {
+        if (empty) {
+            if (tile == Tiles.DOUBLE_WORD) {
+                color = Color.PINK;
+            } else if (tile == Tiles.TRIPLE_WORD) {
+                color = Color.RED;
+            } else if (tile == Tiles.DOUBLE_LETTER) {
+                color = Color.BLUE.brighter();
+            } else if (tile == Tiles.TRIPLE_LETTER) {
+                color = Color.CYAN;
+            } else if (tile == Tiles.CENTER_TILE) {
+                color = Color.YELLOW;
+            } else {
+                color = new Color(255, 204, 102);
+            }
+        } else {
+            if (permanent) color = Color.ORANGE;
+            else if (clicked) color = Color.GREEN;
+            else color = Color.YELLOW.brighter();
+        }
+    }
+
+    void refreshValues(char c) {
+        empty = false;
+        this.c = c;
+        tileText = ("" + c).toUpperCase();
+        tileValue = Letters.Value(c);
+    }
+
+    void put(char c) {
+        refreshValues(c);
+        setColorsToDefaultState();
+        repaint();
+        selected.empty = true;
+        selected.deselect();
+    }
+
+    void select() {
+        selected = this;
+        selected.clicked = true;
+        setColorsToDefaultState();
+        repaint();
+    }
+
+    void deselect() {
+        selected.clicked = false;
+        setColorsToDefaultState();
+        selected.repaint();
+        selected = null;
     }
 
     public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint
                 (RenderingHints.KEY_TEXT_ANTIALIASING,
                         RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        setDefault();
 
-        g.setColor(Color.GRAY);
-        g.fillRoundRect(0, 0, TILE_SIZE - 1, TILE_SIZE - 1, 10, 10);
+        if (empty) {
+            // Draws the appropriate square (double word in blue, etc)
+            g.setColor(Color.GRAY);
+            g.fillRoundRect(0, 0, TILE_SIZE - 1, TILE_SIZE - 1, 10, 10);
 
+            g.setColor(color);
+            g.fillRoundRect(0, 0, TILE_SIZE - 3, TILE_SIZE - 3, 10, 10);
 
-        if (hover && tileLetter == null) g.setColor(color.darker());
-        else g.setColor(color);
-
-        g.fillRoundRect(0, 0, TILE_SIZE - 3, TILE_SIZE - 3, 10, 10);
-
-
-        if (tileLetter == null) { // empty tile
-
-            if (tile != Tiles.CENTER_TILE &&
-                    tile != Tiles.PLAIN) {
-                getTileText();
-
+            if (tile != Tiles.CENTER_TILE && tile != Tiles.PLAIN) {
+//                getTileText();
                 g.setColor(Color.BLACK);
-                g.setFont(new Font("Courier Sans", Font.PLAIN, 11));
+                g.setFont(new Font("Courier Sans", Font.PLAIN, 10));
                 g.drawString(text1, (TILE_SIZE - text1.length() * 6) / 2, 20);
                 g.drawString(text2, (TILE_SIZE - text2.length() * 6) / 2, 35);
-
-
             }
-        } else if (tileLetter != null) {
+        } else {
+            // puts in a letter
 
-            if (permanent) col = Color.ORANGE;
-            else if (thisClicked) col = Color.GREEN;
-            else col = Color.YELLOW.brighter();
 
             g.setColor(Color.BLACK);
-            g.fillRect(2, 2, TILE_SIZE - 1, TILE_SIZE - 1);
-            g.drawRect(0, 0, TILE_SIZE - 3, TILE_SIZE - 3);
-            g.setColor(col);
-            g.fillRect(1, 1, TILE_SIZE - 4, TILE_SIZE - 4); //fill in square
-
+            g.fillRoundRect(0, 0, TILE_SIZE - 1, TILE_SIZE - 1, 10, 10);
+            g.setColor(color);
+            g.fillRoundRect(0, 0, TILE_SIZE - 3, TILE_SIZE - 3, 10, 10); //fill in square
 
             g.setColor(Color.BLACK);       // fill in text
+            g.drawRoundRect(1, 1, TILE_SIZE - 4, TILE_SIZE - 4, 10, 10);
             g.setFont(new Font("Courier Sans", Font.PLAIN, 36));
-            g.drawString(tileLetter, 7, 35);
+            g.drawString(("" + c).toUpperCase(), 7, 35);
 
-            g.setFont(new Font("Courier Sans", Font.BOLD, 12));
+            g.setFont(new Font("Courier Sans", Font.BOLD, 10));
             g.drawString(tileValue + "", 31, 44);
         }
     }
 
-    void setDefault() {
-
-        if (tile == Tiles.DOUBLE_WORD) {
-            color = Color.PINK;
-        } else if (tile == Tiles.TRIPLE_WORD) {
-            color = Color.RED;
-        } else if (tile == Tiles.DOUBLE_LETTER) {
-            color = Color.BLUE.brighter();
-        } else if (tile == Tiles.TRIPLE_LETTER) {
-            color = Color.CYAN;
-        } else if (tile == Tiles.CENTER_TILE) {
-            color = Color.YELLOW;
-        } else {
-            color = new Color(255, 204, 102);
-        }
-    }
-
-    void putOnBoard(Rack.PlayerPiece p) {
-        c = p.c;
-        tileLetter = p.text;
-        tileValue = p.value;
-        thisClicked = false;
-        repaint();
-        Rack.selected.RemovePiece();
-        Rack.selected = null;
-    }
-    void putOnBoard(Tile tile) {
-        c = tile.c;
-        tileLetter = tile.tileLetter;
-        tileValue = tile.tileValue;
-        repaint();
-        tile.clearTile();
-        tile.repaint();
-        boardClicked = null;
-    }
-    public void clearTile() {
-        tileLetter = null;
-        tileValue = -1;
-        thisClicked = false;
-        permanent = false;
-        boardClicked = null;
-        repaint();
-    }
-
-    boolean tileOccupied() {
-        return tileLetter != null;
-    }
-
-    boolean pieceSelected() {       // playerpiece from sidepanel clicked
-        return (Rack.selected != null && !pieceEmpty());
-    }
-
-    boolean tileClicked() {     //board is clicked
-        return boardClicked != null;
-    }
-
-    boolean pieceEmpty() {     // used in piece selected
-        return Rack.selected != null && Rack.selected.empty;
-    }
-
-    void clickThis() {
-        thisClicked = true;
-        boardClicked = this;
-        repaint();
-    }
-
     private class HoverListener extends MouseAdapter {
+
         public void mouseEntered(MouseEvent e) {
-            hover = true;
-            repaint();
+            if (!clicked || !permanent) {
+                color = color.darker();
+                repaint();
+            }
         }
 
         public void mouseExited(MouseEvent e) {
-            hover = false;
+            setColorsToDefaultState();
             repaint();
         }
 
-
-        public void mousePressed(MouseEvent e) {   //truth table approach here
+        public void mousePressed(MouseEvent e) {
             if (!permanent) {
-                boolean TO, PS,TC;
-                TO = tileOccupied();
-                PS = pieceSelected();
-                TC = tileClicked();
-                if (TO && PS && TC) {
-                    System.out.println("Impossible case. Case 1");
-                } else if (!TO && PS && !TC) {
-                    System.out.println("Move from clicked on rack to empty on board");
-                    putOnBoard(Rack.selected);
-                } else if (!TO && !PS && TC) {
-                    putOnBoard(boardClicked);
-                    System.out.println("Case 3");
-                } else if (!TO && !PS && !TC) {
-                    System.out.println("Case 4");
-                } else if (TO && PS && TC) {
-                    System.out.println("Case 5");
-                } else if (TO && PS && !TC) {
-                    Rack.selected.deselect();
-                    System.out.println("Case 6");
-                } else if (TO && !PS && TC) {
-                    boardClicked.thisClicked = false;
-                    boardClicked.repaint();
-                    boardClicked = null;
-                    System.out.println("Case 7");
-                } else if (TO && !PS && !TC) {
-                    clickThis();
-                    System.out.println("Case 8");
+                if (empty && selected != null) {
+                    put(selected.c);
+                } else if (!empty && selected != null) {
+                    deselect();
+                } else if (!empty && selected == null) {
+                    select();
                 }
             }
         }
     }
+
 }

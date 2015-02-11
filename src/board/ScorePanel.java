@@ -1,8 +1,9 @@
 package board;
 
+import wordsearch.Game;
+
 import javax.swing.*;
 import java.awt.*;
-import wordsearch.Game;
 
 public class ScorePanel extends JPanel {
     Game game;
@@ -41,6 +42,5 @@ public class ScorePanel extends JPanel {
             g.drawString("for a score: " + lastScore, 8, 120);
 
         }
-
     }
 }

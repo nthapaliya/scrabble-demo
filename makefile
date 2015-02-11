@@ -13,4 +13,3 @@ clean:
 	rm dst/board/*.class
 	rm dst/wordsearch/*.class
 	rm dst/*.class
-	
