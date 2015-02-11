@@ -1,6 +1,6 @@
-package board;
+package wordsearch;
 
-public enum TileType {
+public enum Tiles {
 
     PLAIN("Plain Tile", 1, 1),
     CENTER_TILE("Center Tile", 1, 1),
@@ -12,13 +12,13 @@ public enum TileType {
     private int letterMultiplier, wordMultiplier;
     private String type;
 
-    private TileType(String n, int i, int j) {
+    private Tiles(String n, int i, int j) {
         type = n;
         letterMultiplier = i;
         wordMultiplier = j;
     }
 
-    public static TileType GetType(int row, int col) {
+    public static Tiles GetType(int row, int col) {
         if (row > 7) {
             row = 14 - row;
         }
