@@ -9,6 +9,9 @@ public class Game {
     Player player2;
     Letters letterBag;
 
+    String lastWord;
+    int lastScore;
+
     public Game(String playerName, String playerName2) {
         player1 = new Player(playerName);
         player2 = new Player(playerName2);
@@ -26,5 +29,6 @@ public class Game {
     public String ErrMsg(char[][] newState) {
         return board.ErrMsg(newState);
     }
-
+    public String LastWord() { return lastWord; }
+    public int LastScore() { return lastScore; }
 }

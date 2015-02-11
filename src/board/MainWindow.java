@@ -38,9 +38,10 @@ public class MainWindow extends JPanel {
             setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
             setBackground(Color.WHITE);
 
-            add(new ScorePanel(game));
-            add(new PieceHolder(game));
-            add(new ButtonPanel(game));
+            ScorePanel sp = new ScorePanel(game);
+            add(sp);
+            add(new Rack(game));
+            add(new ButtonPanel(sp, game));
         }
     }
 }

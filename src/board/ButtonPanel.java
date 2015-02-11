@@ -10,30 +10,34 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Scanner;
-
+import wordsearch.Letters;
 class ButtonPanel extends JPanel implements ActionListener {
 
     public static int additional, userScore, compScore;
     public static String lastBest;
     private Tile[][] board;
     private Tile[][] transBoard;
-    private JButton goButton;
+    private JButton goButton, loseButton, reset;
     Dawg dictionary;
     Game game;
     char[][] currentBoard;
 // ComPlayer comPlayer;
+    ScorePanel sp;
 
-    ButtonPanel(Game game) {
+    ButtonPanel(ScorePanel sp, Game game) {
         this.game = game;
+        this.sp = sp;
         goButton = new JButton("Go!");
-        JButton loseButton = new JButton("Lose Turn");
+        loseButton = new JButton("Lose Turn");
+        reset = new JButton("Reset");
 
         add(goButton);
         add(loseButton);
+        add(reset);
 
         goButton.addActionListener(this);
         loseButton.addActionListener(this);
-
+        reset.addActionListener(this);
         // comPlayer = new ComPlayer(this);
         ArrayList<String> list = new Utils().wordlist;
         dictionary = new Dawg(list);
@@ -54,37 +58,37 @@ class ButtonPanel extends JPanel implements ActionListener {
     }
 
 
-    void returnPiecesToBag() {
-        for (int i = 0; i < 7; i++) {
-            if (!PieceHolder.pieceArray[i].isEmpty) {
-                game.AddToBag(PieceHolder.pieces[i].charAt(0));
-            }
-            PieceHolder.pieceArray[i].isEmpty = true;
-        }
-    }
-
-    void drawNewPieces() {
-        PlayerPiece.selected = null;
-        int i = 0;
-        while (game.remainingLetters() > 0 && i < 7) {
-            if (PieceHolder.pieceArray[i].isEmpty) {
-                PieceHolder.pieces[i] = ""+game.DrawRandom();
-
-                PieceHolder.pieceArray[i].value =
-                        Piece.getPiece(PieceHolder.pieces[i].charAt(0)).Value();
-                PieceHolder.pieceArray[i].text = PieceHolder.pieces[i];
-                PieceHolder.pieceArray[i].isEmpty = false;
-                PieceHolder.pieceArray[i].color = Color.YELLOW;
-                PieceHolder.pieceArray[i].repaint();
-            }
-            i++;
-        }
-        ScorePanel.scorePanel.repaint();
-    }
-
-    boolean onCenter() {
-        return (MainWindow.tiles[7][7].tileLetter != null);
-    }
+//    void returnPiecesToBag() {
+//        for (int i = 0; i < 7; i++) {
+//            if (!Rack.pieceArray[i].isEmpty) {
+//                game.AddToBag(Rack.pieces[i]);
+//            }
+//            Rack.pieceArray[i].isEmpty = true;
+//        }
+//    }
+//
+//    void drawNewPieces() {
+//        Rack.selected = null;
+//        int i = 0;
+//        while (game.remainingLetters() > 0 && i < 7) {
+//            if (Rack.pieceArray[i].isEmpty) {
+//                Rack.pieces[i] = game.DrawRandom();
+//
+//                Rack.pieceArray[i].value =
+//                        Letters.Value(Rack.pieces[i]);
+//                Rack.pieceArray[i].text = ""+Rack.pieces[i];
+//                Rack.pieceArray[i].isEmpty = false;
+//                Rack.pieceArray[i].color = Color.YELLOW;
+//                Rack.pieceArray[i].repaint();
+//            }
+//            i++;
+//        }
+//        sp.repaint();
+//    }
+//
+//    boolean onCenter() {
+//        return (MainWindow.tiles[7][7].tileLetter != null);
+//    }
 
     ArrayList<String> getWords(Tile[][] theBoard) {
         ArrayList<String> list = new ArrayList<String>();
@@ -229,9 +233,9 @@ class ButtonPanel extends JPanel implements ActionListener {
 
             if (word.length() > 1) {
                 for (int i = y - word.length() + 1; i < y + 1; i++) {
-                    wordMulti = wordMulti * theBoard[x][i].tileType.WordMultiplier();
+                    wordMulti = wordMulti * theBoard[x][i].tile.WordMultiplier();
                     score = score + theBoard[x][i].tileValue *
-                            theBoard[x][i].tileType.LetterMultiplier();
+                            theBoard[x][i].tile.LetterMultiplier();
                 }
                 score = score * wordMulti;
                 //System.out.println(score);
@@ -248,59 +252,61 @@ class ButtonPanel extends JPanel implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(goButton)) {
-            String errMsg = game.ErrMsg(currentBoard);
-            if (errMsg == null) {
-                additional = getPoints();
-                userScore = userScore + additional;
-                ScorePanel.scorePanel.repaint();
+//            String errMsg = game.ErrMsg(currentBoard);
+//            if (errMsg == null) {
+//                additional = getPoints();
+//                userScore = userScore + additional;
+//                sp.repaint();
+//
+//                makePermanent();
+//                drawNewPieces();
+////                computerTurn();
+//            } else {
+//                JOptionPane.showMessageDialog(MainWindow.mw, errMsg);
+//            }
+////            else if (!onCenter())
+////                JOptionPane.showMessageDialog
+////                        (MainWindow.mw,
+////                                "First word should lie across the center tile");
+////            else if (!checkSpelling())
+////                JOptionPane.showMessageDialog
+////                        (MainWindow.mw,
+////                                "Use valid words and make sure all your combinations are valid");
+////            else if (!checkSingleLine())
+////                JOptionPane.showMessageDialog
+////                        (MainWindow.mw,
+////                                "Main word should be a single unbroken line");
+////            else
+////                JOptionPane.showMessageDialog
+////                        (MainWindow.mw,
+////                                "Place letters adjacent to placed tiles");
+        } else if (e.getSource().equals(loseButton)) {
+//            String[] options = {"Yes", "No"};
+//            int result = JOptionPane.showOptionDialog
+//                    (MainWindow.mw, "Are you sure? Absolutely sure?",
+//                            "Skipping a step? Really?", JOptionPane.YES_NO_OPTION,
+//                            JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+//            boolean good = true;
+//
+//            if (result == 0) {
+//                for (int i = 0; i < 7; i++) {
+//                    if (Rack.pieceArray[i].isEmpty) {
+//                        JOptionPane.showMessageDialog
+//                                (MainWindow.mw,
+//                                        "Place all pieces back in piece holder please");
+//                        good = false;
+//                        break;
+//                    }
+//
+//                }
+//                if (good) {
+//                    returnPiecesToBag();
+//                    if (game.remainingLetters() > 0) drawNewPieces();
+////                    computerTurn();
+//                }
+//            }
 
-                makePermanent();
-                drawNewPieces();
-//                computerTurn();
-            } else {
-                JOptionPane.showMessageDialog(MainWindow.mw, errMsg);
-            }
-//            else if (!onCenter())
-//                JOptionPane.showMessageDialog
-//                        (MainWindow.mw,
-//                                "First word should lie across the center tile");
-//            else if (!checkSpelling())
-//                JOptionPane.showMessageDialog
-//                        (MainWindow.mw,
-//                                "Use valid words and make sure all your combinations are valid");
-//            else if (!checkSingleLine())
-//                JOptionPane.showMessageDialog
-//                        (MainWindow.mw,
-//                                "Main word should be a single unbroken line");
-//            else
-//                JOptionPane.showMessageDialog
-//                        (MainWindow.mw,
-//                                "Place letters adjacent to placed tiles");
-        } else {
-            String[] options = {"Yes", "No"};
-            int result = JOptionPane.showOptionDialog
-                    (MainWindow.mw, "Are you sure? Absolutely sure?",
-                            "Skipping a step? Really?", JOptionPane.YES_NO_OPTION,
-                            JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
-            boolean good = true;
-
-            if (result == 0) {
-                for (int i = 0; i < 7; i++) {
-                    if (PieceHolder.pieceArray[i].isEmpty) {
-                        JOptionPane.showMessageDialog
-                                (MainWindow.mw,
-                                        "Place all pieces back in piece holder please");
-                        good = false;
-                        break;
-                    }
-
-                }
-                if (good) {
-                    returnPiecesToBag();
-                    if (game.remainingLetters() > 0) drawNewPieces();
-//                    computerTurn();
-                }
-            }
+        } else { // resetButton;
 
         }
 

@@ -32,27 +32,20 @@ public enum Tiles {
         }
 
         if (row == col) {
-            if (row == 7)
-                return CENTER_TILE;
-            if (row == 0)
-                return TRIPLE_WORD;
-            if (row >= 1 && row <= 4)
-                return DOUBLE_WORD;
-            if (row == 5)
-                return TRIPLE_LETTER;
-            else
-                return DOUBLE_LETTER;
+            if (row == 7) return CENTER_TILE;
+            if (row == 0) return TRIPLE_WORD;
+            if (row >= 1 && row <= 4) return DOUBLE_WORD;
+            if (row == 5) return TRIPLE_LETTER;
+            return DOUBLE_LETTER;
         }
 
-        if (row == 7 && col == 0)
-            return TRIPLE_WORD;
+        if (row == 7 && col == 0) return TRIPLE_WORD;
 
         if (row == 3 && col == 0 || row == 6 && col == 2 || row == 7 && col == 3) {
             return DOUBLE_LETTER;
         }
 
-        if (row == 5 && col == 1)
-            return TRIPLE_LETTER;
+        if (row == 5 && col == 1) return TRIPLE_LETTER;
         return PLAIN;
     }
 
@@ -63,8 +56,9 @@ public enum Tiles {
     public int LetterMultiplier() {
         return letterMultiplier;
     }
-
     public int WordMultiplier() {
         return wordMultiplier;
     }
+    public static int LetterMultiplier(int i, int j) { return GetType(i,j).LetterMultiplier(); }
+    public static int WordMultiplier(int i, int j) { return GetType(i,j).WordMultiplier(); }
 }
