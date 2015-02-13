@@ -1,6 +1,6 @@
 // Niraj Thapaliya, 2015
 
-import board.*;
+import board.MainWindow;
 
 import javax.swing.*;
 

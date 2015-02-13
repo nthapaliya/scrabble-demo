@@ -12,7 +12,7 @@ public class Tile extends JPanel {
     final int TILE_SIZE = 45;
 
     Tiles tile;
-    boolean permanent, hover;
+    private boolean permanent, hover;
     String[] tileText;
     char c;
 
@@ -70,6 +70,11 @@ public class Tile extends JPanel {
     boolean isEmpty(){ return c ==0; }
     boolean isSelected() { return selected == this; }
     boolean isPermanent() { return permanent; }
+
+    void makePermanent() {
+        permanent = true;
+        repaint();
+    }
 
     public void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;

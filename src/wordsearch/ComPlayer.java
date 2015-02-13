@@ -1,9 +1,5 @@
 package wordsearch;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
-
 class ComPlayer extends Player {
 
     int bestScore;

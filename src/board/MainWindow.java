@@ -6,16 +6,14 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainWindow extends JPanel {
-    public static Tile[][] tiles;
-    public static MainWindow mw;
-    public Game game;
+    static Tile[][] tiles;
+    static Game game;
 
     public MainWindow() {
-        mw = this;
         game = new Game("Player 1", "Player 2");
         setBackground(Color.WHITE);
         add(new Board());
-        add(new SidePanel(game));
+        add(new SidePanel());
     }
 
     class Board extends JPanel {
@@ -24,7 +22,6 @@ public class MainWindow extends JPanel {
             setLayout(new GridLayout(15, 15, 1, 1));
             setBackground(Color.WHITE);
 
-            // Build the board
             for (int i = 0; i < 15; i++) {
                 for (int j = 0; j < 15; j++) {
                     tiles[i][j] = new Tile(i, j);
@@ -35,14 +32,13 @@ public class MainWindow extends JPanel {
     }
 
     class SidePanel extends JPanel {
-        SidePanel(Game game) {
+        SidePanel() {
             setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
             setBackground(Color.WHITE);
 
-            ScorePanel sp = new ScorePanel(game);
-            add(sp);
-            add(new Rack(game));
-            add(new ButtonPanel(sp, game));
+            add(new ScorePanel());
+            add(new Rack());
+            add(new ButtonPanel());
         }
     }
 }

@@ -1,5 +1,6 @@
-import java.util.ArrayList;
 import wordsearch.Game;
+
+import java.util.ArrayList;
 class Snippet {
 
     public static void main(String[] args){

@@ -6,10 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ScorePanel extends JPanel {
-    Game game;
+    Game game = MainWindow.game;
 
-    ScorePanel(Game game) {
-        this.game = game;
+    ScorePanel() {
         setPreferredSize(new Dimension(200, 150));
         setBackground(Color.WHITE);
     }

@@ -7,10 +7,9 @@ import java.awt.*;
 
 class Rack extends JPanel {
     int[] playerRack;
-    Game game;
+    Game game = MainWindow.game;
 
-    public Rack(Game game) {
-        this.game = game;
+    public Rack() {
         setLayout(new GridLayout(7, 1, 10, 5));
         setBackground(Color.WHITE);
         playerRack = new int[26];
@@ -26,11 +25,8 @@ class Rack extends JPanel {
      */
     class RackTile extends Tile {
         RackTile(char c) {
-            super(7, 7);
+            super(0,0);
             this.c = c;
-            tile = null;
-
-            setPreferredSize(new Dimension(TILE_SIZE, TILE_SIZE));
         }
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
