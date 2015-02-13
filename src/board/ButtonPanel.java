@@ -2,6 +2,7 @@ package board;
 
 import wordsearch.Dawg;
 import wordsearch.Game;
+import wordsearch.Letters;
 import wordsearch.Utils;
 
 import javax.swing.*;
@@ -232,7 +233,7 @@ class ButtonPanel extends JPanel implements ActionListener {
             if (word.length() > 1) {
                 for (int i = y - word.length() + 1; i < y + 1; i++) {
                     wordMulti = wordMulti * theBoard[x][i].tile.WordMultiplier();
-                    score = score + theBoard[x][i].tileValue *
+                    score = score + Letters.Value(theBoard[x][i].c) *
                             theBoard[x][i].tile.LetterMultiplier();
                 }
                 score = score * wordMulti;
