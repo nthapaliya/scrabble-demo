@@ -40,3 +40,4 @@ hs_err_pid*
 
 *.bak
 *.tmp
+*.sh

@@ -2,11 +2,8 @@ package wordsearch;
 
 class ComPlayer extends Player {
 
-    int bestScore;
-    String bestWord;
-
-ComPlayer() {
-    super("Computer");
+    ComPlayer() {
+        super("Computer");
 
         // while (LetterBag.getSize() > 0 && comPieces.size() < 7) {
         //         String piece = LetterBag.drawRandom();
@@ -15,14 +12,14 @@ ComPlayer() {
         //         // System.out.print(piece);
         // }
         // System.out.println();
-}
+    }
 
-public void compTurn(){
+    public void compTurn() {
         // board = buttonPanel.board;
         // transBoard = buttonPanel.transBoard;
 
-        bestScore = 0;
-        bestWord = "";
+        int bestScore = 0;
+        String bestWord = "";
 
         // tryWords(board);
         // tryWords(transBoard);
@@ -42,9 +39,9 @@ public void compTurn(){
         //                 (Board.board,
         //                 "Computer decided to lose turn");
         // }
-}
+    }
 
-void play (String s) {
+    void play(String s) {
         // Tile[][]  theBoard = new Tile[15][15];
         // Scanner scn = new Scanner(s);
         // String word = scn.next();
@@ -73,10 +70,10 @@ void play (String s) {
         // }
         // fillPieces();
 
-}
+    }
 
 
-void tryWords () {   // this method finds "anchors"
+    void tryWords() {   // this method finds "anchors"
         // for (int i = 0; i < 15; i++) {
         //         int y = 0;
         //         for (int j = 0; j < 15; j++) {
@@ -90,9 +87,9 @@ void tryWords () {   // this method finds "anchors"
         //                 //break;
         //         }
         // }
-}
+    }
 
-void putWords (String s, int x, int y) { /////////////////////////
+    void putWords(String s, int x, int y) { /////////////////////////
         // int start = y - s.length() + 1;            ////////////////////////////
         //
         // for (int i = start; i < y; i++) {
@@ -111,7 +108,7 @@ void putWords (String s, int x, int y) { /////////////////////////
         //
         //
         // Board.clearBoard();
-}
+    }
 
 // void LegalMove(String s, int x, int y, Tile[][] theBoard) {
 //         putWords (s, x, y, theBoard);

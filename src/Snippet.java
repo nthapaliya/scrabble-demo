@@ -1,42 +1,26 @@
 import wordsearch.Game;
 
 import java.util.ArrayList;
-class Snippet {
+import java.awt.*;
+import javax.swing.*;
+class Snippet extends JPanel {
 
     public static void main(String[] args){
-//        ArrayList<String> l = ReadFile(".../resources/enable1.txt");
-//        Dawg dg = new Dawg(l);
-//
-//        for (String word: l) {
-//          if (!dg.Contains(word)) System.out.println("Something went wrong");
-//        }
-//        System.out.println("ok");
-    Game game = new Game("p1", "p2");
-        char c = 'a';
-    while (c != '!') {
-        c = game.DrawRandom();
-    }
+        new Snippet();
     }
 
-    public static ArrayList<String> ReadFile(String filename){
-        ArrayList<String> l = new ArrayList<String>();
+    public Snippet () {
+        String message = "This is my message";
+        char[] charArray = message.toCharArray();
 
-        java.util.Scanner inpt;
-        java.io.FileReader r;
+        Font font = new Font("Courier Sans", Font.PLAIN, 12);
+        FontMetrics fm = getFontMetrics(font);
 
-        try {
-                r = new java.io.FileReader(filename);
-                inpt = new java.util.Scanner(r);
-                while (inpt.hasNext()) {
-                        l.add(inpt.next());
-                }
-                inpt.close();
-        } catch (java.io.FileNotFoundException e) {
-                System.out.println("File not found");
-                System.exit(1);
-        }
+        System.out.printf("%s and %d\n", message, fm.charsWidth(charArray, 0, charArray.length));
 
-        return l;
-}
+    }
+    public void paintComponent(Graphics g) {
+
+    }
 
 }

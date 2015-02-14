@@ -1,15 +1,13 @@
 // Niraj Thapaliya, 2015
 
-import board.ScrabblePanel;
-
 import javax.swing.*;
 
 class Scrabble extends JFrame {
     Scrabble() {
         super("Scrabble 0.1a");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        setContentPane(new ScrabblePanel());
+        setContentPane(new board.Scrabble());
         pack();
         setVisible(true);
     }

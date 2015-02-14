@@ -8,7 +8,7 @@ public enum Tiles {
     TRIPLE_LETTER("Triple Letter", 3, 1),
     DOUBLE_WORD("Double Word", 1, 2),
     TRIPLE_WORD("Triple Word", 1, 3),
-    BLANK ("blank tile", 0, 0);
+    BLANK("blank tile", 0, 0);
 
     private int letterMultiplier, wordMultiplier;
     private String type;
@@ -36,15 +36,21 @@ public enum Tiles {
 
         if (row == col) {
             switch (row) {
-                case 0: return TRIPLE_WORD;
+                case 0:
+                    return TRIPLE_WORD;
                 case 1:
                 case 2:
                 case 3:
-                case 4: return DOUBLE_WORD;
-                case 5: return TRIPLE_LETTER;
-                case 6: return DOUBLE_LETTER;
-                case 7: return CENTER_TILE;
-                default: return null;
+                case 4:
+                    return DOUBLE_WORD;
+                case 5:
+                    return TRIPLE_LETTER;
+                case 6:
+                    return DOUBLE_LETTER;
+                case 7:
+                    return CENTER_TILE;
+                default:
+                    return null;
             }
         }
 
@@ -58,15 +64,23 @@ public enum Tiles {
         return PLAIN;
     }
 
+    public static int LetterMultiplier(int i, int j) {
+        return GetType(i, j).LetterMultiplier();
+    }
+
+    public static int WordMultiplier(int i, int j) {
+        return GetType(i, j).WordMultiplier();
+    }
+
     public String toString() {
         return type;
     }
-    public int LetterMultiplier() {
+
+    int LetterMultiplier() {
         return letterMultiplier;
     }
-    public int WordMultiplier() {
+
+    int WordMultiplier() {
         return wordMultiplier;
     }
-    public static int LetterMultiplier(int i, int j) { return GetType(i,j).LetterMultiplier(); }
-    public static int WordMultiplier(int i, int j) { return GetType(i,j).WordMultiplier(); }
 }

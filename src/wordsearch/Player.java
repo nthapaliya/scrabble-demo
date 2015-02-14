@@ -4,10 +4,10 @@ package wordsearch;
  * Created by nirajthapaliya on 2/8/15.
  */
 class Player {
-    int[] rack;
-    int score;
-    char[][] board;
-    String name;
+    private int[] rack;
+    private int score;
+    private char[][] board;
+    private String name;
 
     Player(String name) {
         rack = new int[26];
@@ -16,5 +16,7 @@ class Player {
         this.name = name;
     }
 
-    int Score() { return score;}
+    int Score() {
+        return score;
+    }
 }

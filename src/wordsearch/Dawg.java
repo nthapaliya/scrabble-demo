@@ -6,6 +6,7 @@ public class Dawg {
     private static final int OFFSET = 'a';
     private State root;
     private Hashtable<String, State> register;
+
     public Dawg(Iterable<String> list) {
         root = new State();
         AddFromAlphabetic(list);
@@ -63,21 +64,21 @@ public class Dawg {
         return st.eow;
     }
 
-    private boolean verify() {
-        State st = root;
-        return false;
-    }
+//    private boolean verify() {
+//        State st = root;
+//        return false;
+//    }
 
     private void replaceOrRegister(State st) {
-        State lastchild = st.lastChild();
-        if (lastchild.hasChildren()) {
-            replaceOrRegister(lastchild);
+        State lastChild = st.lastChild();
+        if (lastChild.hasChildren()) {
+            replaceOrRegister(lastChild);
         }
-        String hsh = lastchild.getHash();
+        String hsh = lastChild.getHash();
         if (register.containsKey(hsh)) {
             st.edges[st.lastIndex()] = register.get(hsh);
         } else {
-            register.put(hsh, lastchild);
+            register.put(hsh, lastChild);
         }
     }
 
@@ -93,7 +94,7 @@ public class Dawg {
         }
 
         String getHash() {
-            if (this.hash != "") {
+            if (!this.hash.equals("")) {
                 return this.hash;
             }
             String s = "";
