@@ -3,7 +3,7 @@ package board;
 /**
  * Created by nirajthapaliya on 2/13/15.
  */
-public class BoardState {
+class BoardState {
     static int[] getRack(ScrabblePanel.Tile[] tileRack){
         int[] rack = new int[26];
         for (ScrabblePanel.Tile t: tileRack) {

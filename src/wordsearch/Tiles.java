@@ -7,7 +7,8 @@ public enum Tiles {
     DOUBLE_LETTER("Double Letter", 2, 1),
     TRIPLE_LETTER("Triple Letter", 3, 1),
     DOUBLE_WORD("Double Word", 1, 2),
-    TRIPLE_WORD("Triple Word", 1, 3);
+    TRIPLE_WORD("Triple Word", 1, 3),
+    BLANK ("blank tile", 0, 0);
 
     private int letterMultiplier, wordMultiplier;
     private String type;
@@ -19,6 +20,8 @@ public enum Tiles {
     }
 
     public static Tiles GetType(int row, int col) {
+        if (row < 0 || col < 0) return BLANK;
+
         if (row > 7) {
             row = 14 - row;
         }
@@ -32,11 +35,17 @@ public enum Tiles {
         }
 
         if (row == col) {
-            if (row == 7) return CENTER_TILE;
-            if (row == 0) return TRIPLE_WORD;
-            if (row >= 1 && row <= 4) return DOUBLE_WORD;
-            if (row == 5) return TRIPLE_LETTER;
-            return DOUBLE_LETTER;
+            switch (row) {
+                case 0: return TRIPLE_WORD;
+                case 1:
+                case 2:
+                case 3:
+                case 4: return DOUBLE_WORD;
+                case 5: return TRIPLE_LETTER;
+                case 6: return DOUBLE_LETTER;
+                case 7: return CENTER_TILE;
+                default: return null;
+            }
         }
 
         if (row == 7 && col == 0) return TRIPLE_WORD;

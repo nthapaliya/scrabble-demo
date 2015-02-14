@@ -11,20 +11,23 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * Created by nirajthapaliya on 2/13/15.
+ */
 public class ScrabblePanel extends JPanel {
     static private ScrabblePanel sp;
     private ScorePanel scorePanel;
-    private Game game;
+    private final Game game;
     private Tile selected;
-    private RackTile[] rack;
+    private final Tile[] rack;
     private Tile[][] tiles;
 
     public ScrabblePanel() {
         sp = this;
         game = new Game("Player 1", "Player 2");
-        rack = new RackTile[7];
+        rack = new Tile[7];
 
-        setBackground(Color.WHITE);
+//        setBackground(Color.WHITE);
         add(new Board());
         add(new SidePanel());
     }
@@ -42,7 +45,7 @@ public class ScrabblePanel extends JPanel {
             }
         }
         int rackIndex = 0;
-        RackTile rackTile = rack[rackIndex];
+        Tile rackTile = rack[rackIndex];
 
         for (int i = 0; i < index; i++) {
             while (!rackTile.isEmpty()) {
@@ -54,20 +57,19 @@ public class ScrabblePanel extends JPanel {
 
     void refillRack() {
         for (int i = 0; i < 7; i++) {
-            RackTile racktile = rack[i];
-            if (racktile.isEmpty()) {
+            Tile rackTile = rack[i];
+            if (rackTile.isEmpty()) {
                 char c = game.DrawRandom();
-                racktile.put(c);
+                rackTile.put(c);
             }
         }
     }
 
-    void fixAll() {
+    void fixUnfixed() {
         for (Tile[] row : tiles) {
             for (Tile tile : row) {
                 if (!tile.isEmpty() && !tile.isPermanent()) {
                     tile.makePermanent();
-                    tile.repaint();
                 }
             }
         }
@@ -77,7 +79,7 @@ public class ScrabblePanel extends JPanel {
         Board() {
             tiles = new Tile[15][15];
             setLayout(new GridLayout(15, 15, 1, 1));
-            setBackground(Color.WHITE);
+//            setBackground(Color.LIGHT_GRAY);
 
             for (int i = 0; i < 15; i++) {
                 for (int j = 0; j < 15; j++) {
@@ -91,40 +93,39 @@ public class ScrabblePanel extends JPanel {
     class Tile extends JPanel {
         final int TILE_SIZE = 45;
         final Tiles tile;
+        final Color tileColor;
 
         private boolean permanent, hover;
-        final String[] tileText;
+        String[] tileText;
         char c;
 
         Tile(int row, int col) {
             tile = Tiles.GetType(row, col);
-            tileText = tile.toString().split("\\s");
+            tileColor = getColor(tile);
+            if (tile!=null) tileText = tile.toString().split("\\s");
 
-            setBackground(Color.WHITE);
+//            setBackground(Color.LIGHT_GRAY);
             setPreferredSize(new Dimension(TILE_SIZE, TILE_SIZE));
             addMouseListener(new HoverListener());
         }
 
-        Color getColor() {
-            if (isEmpty()) {
-                if (tile == Tiles.DOUBLE_WORD) {
-                    return Color.PINK;
-                } else if (tile == Tiles.TRIPLE_WORD) {
-                    return Color.RED;
-                } else if (tile == Tiles.DOUBLE_LETTER) {
-                    return Color.BLUE.brighter();
-                } else if (tile == Tiles.TRIPLE_LETTER) {
-                    return Color.CYAN;
-                } else if (tile == Tiles.CENTER_TILE) {
-                    return Color.YELLOW;
-                } else {
-                    return new Color(255, 204, 102);
+        Color getColor(Tiles tile) {
+                switch (tile) {
+                    case DOUBLE_WORD:
+                        return Color.PINK;
+                    case TRIPLE_WORD:
+                        return Color.RED;
+                    case DOUBLE_LETTER:
+                        return new Color(0x52A5FF);
+                    case TRIPLE_LETTER:
+                        return Color.CYAN;
+                    case CENTER_TILE:
+                        return Color.RED.darker();
+                    case PLAIN:
+                        return new Color(0xFFF8AD);
+                    default:
+                        return Color.GRAY;
                 }
-            } else {
-                if (isPermanent()) return Color.ORANGE;
-                else if (isSelected()) return Color.GREEN;
-            }
-            return Color.YELLOW.brighter();
         }
 
         void put(char tileC) {
@@ -162,6 +163,7 @@ public class ScrabblePanel extends JPanel {
 
         void makePermanent() {
             permanent = true;
+            repaint();
         }
 
         public void paintComponent(Graphics g) {
@@ -169,25 +171,34 @@ public class ScrabblePanel extends JPanel {
             g2d.setRenderingHint
                     (RenderingHints.KEY_TEXT_ANTIALIASING,
                             RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-            Color color = getColor();
-            if (hover && !permanent & !isSelected()) {
-                color = color.darker();
-            }
 
             if (isEmpty()) {
                 // Draws the appropriate square (double word in blue, etc)
                 g.setColor(Color.GRAY);
                 g.fillRoundRect(0, 0, TILE_SIZE - 1, TILE_SIZE - 1, 10, 10);
-                g.setColor(color);
+                g.setColor(tileColor);
+
+                if (hover && !isPermanent()) {
+                    g.setColor(tileColor.darker());
+                }
+
                 g.fillRoundRect(0, 0, TILE_SIZE - 3, TILE_SIZE - 3, 10, 10);
 
-                if (tile != Tiles.CENTER_TILE && tile != Tiles.PLAIN) {
+                if (tile != Tiles.CENTER_TILE && tile != Tiles.PLAIN && tile != Tiles.BLANK) {
                     g.setColor(Color.BLACK);
                     g.setFont(new Font("Courier Sans", Font.PLAIN, 10));
                     g.drawString(tileText[0], (TILE_SIZE - tileText[0].length() * 6) / 2, 20);
                     g.drawString(tileText[1], (TILE_SIZE - tileText[1].length() * 6) / 2, 35);
                 }
             } else {
+                Color color;
+                color = Color.YELLOW.brighter();
+                if (hover & !isPermanent() & !isSelected()) color = color.darker();
+                if (isSelected()) color = Color.GREEN;
+                if (isPermanent()) color = Color.ORANGE;
+
+                assert isSelected() != isPermanent();
+
                 // puts in a letter
                 g.setColor(Color.BLACK);
                 g.fillRoundRect(0, 0, TILE_SIZE - 1, TILE_SIZE - 1, 10, 10);
@@ -232,27 +243,10 @@ public class ScrabblePanel extends JPanel {
         }
     }
 
-    class RackTile extends Tile {
-        RackTile(char c) {
-            super(0, 0);
-            this.c = c;
-        }
-
-        public void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            if (isEmpty()) {
-                g.setColor(Color.BLACK);
-                g.fillRoundRect(0, 0, TILE_SIZE - 1, TILE_SIZE - 1, 10, 10);
-                g.setColor(Color.GRAY);
-                g.fillRoundRect(0, 0, TILE_SIZE - 3, TILE_SIZE - 3, 10, 10);
-            }
-        }
-    }
-
     class SidePanel extends JPanel {
         SidePanel() {
             setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-            setBackground(Color.WHITE);
+//            setBackground(Color.WHITE);
 
             add(new ScorePanel());
             add(new Rack());
@@ -261,11 +255,12 @@ public class ScrabblePanel extends JPanel {
         class Rack extends JPanel {
             public Rack() {
                 setLayout(new GridLayout(7, 1, 0, 5));
-                setBackground(Color.WHITE);
+//                setBackground(Color.WHITE);
 
                 for (int i = 0; i < 7; i++) {
                     char c = game.DrawRandom();
-                    rack[i] = new RackTile(c);
+                    rack[i] = new Tile(-1,-1);
+                    rack[i].c = c;
                     add(rack[i]);
                 }
             }
@@ -277,7 +272,7 @@ public class ScrabblePanel extends JPanel {
         ScorePanel() {
             scorePanel = this;
             setPreferredSize(new Dimension(200, 150));
-            setBackground(Color.WHITE);
+//            setBackground(Color.WHITE);
         }
 
         public void paintComponent(Graphics g) {
@@ -317,7 +312,7 @@ public class ScrabblePanel extends JPanel {
         final JButton reset;
 
         ButtonPanel() {
-            setBackground(Color.WHITE);
+//            setBackground(Color.WHITE);
             goButton = new JButton("Go!");
             loseButton = new JButton("Lose Turn");
             reset = new JButton("Reset");
@@ -335,7 +330,7 @@ public class ScrabblePanel extends JPanel {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource().equals(goButton)) {
                 System.out.println("go button");
-                sp.fixAll();
+                sp.fixUnfixed();
                 sp.refillRack();
 
             } else if (e.getSource().equals(loseButton)) {
@@ -349,5 +344,4 @@ public class ScrabblePanel extends JPanel {
 //            sp.repaint();
         }
     }
-
 }
