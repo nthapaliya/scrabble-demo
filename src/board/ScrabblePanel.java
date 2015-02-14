@@ -12,19 +12,70 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class ScrabblePanel extends JPanel {
-    private final Game game;
+    static private ScrabblePanel sp;
+    private ScorePanel scorePanel;
+    private Game game;
     private Tile selected;
+    private RackTile[] rack;
+    private Tile[][] tiles;
 
     public ScrabblePanel() {
+        sp = this;
         game = new Game("Player 1", "Player 2");
+        rack = new RackTile[7];
+
         setBackground(Color.WHITE);
         add(new Board());
         add(new SidePanel());
     }
 
+    void putUnfixedBack() {
+        char[] unfixed = new char[7];
+        int index = 0;
+        for (Tile[] row : tiles) {
+            for (Tile tile : row) {
+                if (!tile.isEmpty() && !tile.isPermanent()) {
+                    unfixed[index++] = tile.c;
+                    tile.c = 0;
+                    tile.repaint();
+                }
+            }
+        }
+        int rackIndex = 0;
+        RackTile rackTile = rack[rackIndex];
+
+        for (int i = 0; i < index; i++) {
+            while (!rackTile.isEmpty()) {
+                rackTile = rack[++rackIndex];
+            }
+            rackTile.put(unfixed[i]);
+        }
+    }
+
+    void refillRack() {
+        for (int i = 0; i < 7; i++) {
+            RackTile racktile = rack[i];
+            if (racktile.isEmpty()) {
+                char c = game.DrawRandom();
+                racktile.put(c);
+            }
+        }
+    }
+
+    void fixAll() {
+        for (Tile[] row : tiles) {
+            for (Tile tile : row) {
+                if (!tile.isEmpty() && !tile.isPermanent()) {
+                    tile.makePermanent();
+                    tile.repaint();
+                }
+            }
+        }
+    }
+
     class Board extends JPanel {
         Board() {
-            Tile[][] tiles = new Tile[15][15];
+            tiles = new Tile[15][15];
             setLayout(new GridLayout(15, 15, 1, 1));
             setBackground(Color.WHITE);
 
@@ -76,9 +127,9 @@ public class ScrabblePanel extends JPanel {
             return Color.YELLOW.brighter();
         }
 
-        void put(Tile t) {
-            this.c = t.c;
-            repaint();
+        void put(char tileC) {
+            this.c = tileC;
+            this.repaint();
         }
 
         void select() {
@@ -168,7 +219,7 @@ public class ScrabblePanel extends JPanel {
             public void mousePressed(MouseEvent e) {
                 if (!isPermanent()) {
                     if (isEmpty() && selected != null) {
-                        put(selected);
+                        put(selected.c);
                         selected.remove();
                         deselect();
                     } else if (!isEmpty() && selected != null) {
@@ -177,6 +228,23 @@ public class ScrabblePanel extends JPanel {
                         select();
                     }
                 }
+            }
+        }
+    }
+
+    class RackTile extends Tile {
+        RackTile(char c) {
+            super(0, 0);
+            this.c = c;
+        }
+
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (isEmpty()) {
+                g.setColor(Color.BLACK);
+                g.fillRoundRect(0, 0, TILE_SIZE - 1, TILE_SIZE - 1, 10, 10);
+                g.setColor(Color.GRAY);
+                g.fillRoundRect(0, 0, TILE_SIZE - 3, TILE_SIZE - 3, 10, 10);
             }
         }
     }
@@ -190,74 +258,57 @@ public class ScrabblePanel extends JPanel {
             add(new Rack());
             add(new ButtonPanel());
         }
-
-        class ScorePanel extends JPanel {
-            ScorePanel() {
-                setPreferredSize(new Dimension(200, 150));
-                setBackground(Color.WHITE);
-            }
-
-            public void paintComponent(Graphics g) {
-                super.paintComponent(g);
-
-                Graphics2D g2d = (Graphics2D) g;
-                g2d.setRenderingHint
-                        (RenderingHints.KEY_TEXT_ANTIALIASING,
-                                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
-
-                g.setColor(Color.BLACK);
-                g.drawRoundRect(1, 1, 195, 140, 10, 10);
-                g.setFont(new Font("Courier Sans", Font.PLAIN, 12));
-
-                g.drawString("Pieces remaining: " + game.remainingLetters() + " ", 8, 20);
-                g.drawString("Player Score:  " + game.Player1Score(), 8, 40);
-                g.drawString("Comp Score:  " + game.Player2Score(), 8, 60);
-
-                String lastWord = game.LastWord();
-                int lastScore = game.LastScore();
-
-                if (lastWord != null) {
-                    g.drawString("Latest word(s) played", 8, 80);
-                    g.setFont(new Font("Courier Sans", Font.BOLD, 12));
-                    g.drawString(lastWord, 20, 100);
-                    g.setFont(new Font("Courier Sans", Font.PLAIN, 12));
-                    g.drawString("for a score: " + lastScore, 8, 120);
-
-                }
-            }
-        }
-
         class Rack extends JPanel {
             public Rack() {
-                setLayout(new GridLayout(7, 1, 10, 5));
+                setLayout(new GridLayout(7, 1, 0, 5));
                 setBackground(Color.WHITE);
 
                 for (int i = 0; i < 7; i++) {
                     char c = game.DrawRandom();
-                    add(new RackTile(c));
-                }
-            }
-
-        }
-
-        class RackTile extends Tile {
-            RackTile(char c) {
-                super(0, 0);
-                this.c = c;
-            }
-
-            public void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                if (isEmpty()) {
-                    g.setColor(Color.BLACK);
-                    g.fillRoundRect(0, 0, TILE_SIZE - 1, TILE_SIZE - 1, 10, 10);
-                    g.setColor(Color.GRAY);
-                    g.fillRoundRect(0, 0, TILE_SIZE - 3, TILE_SIZE - 3, 10, 10);
+                    rack[i] = new RackTile(c);
+                    add(rack[i]);
                 }
             }
         }
 
+    }
+
+    class ScorePanel extends JPanel {
+        ScorePanel() {
+            scorePanel = this;
+            setPreferredSize(new Dimension(200, 150));
+            setBackground(Color.WHITE);
+        }
+
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setRenderingHint
+                    (RenderingHints.KEY_TEXT_ANTIALIASING,
+                            RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+
+            g.setColor(Color.BLACK);
+            g.drawRoundRect(1, 1, 195, 140, 10, 10);
+            g.setFont(new Font("Courier Sans", Font.PLAIN, 12));
+
+            g.drawString("Pieces remaining: " + game.remainingLetters() + " ", 8, 20);
+            g.drawString("Player Score:  " + game.Player1Score(), 8, 40);
+            g.drawString("Comp Score:  " + game.Player2Score(), 8, 60);
+
+            String lastWord = game.LastWord();
+            int lastScore = game.LastScore();
+
+            if (lastWord != null) {
+                g.drawString("Latest word(s) played", 8, 80);
+                g.setFont(new Font("Courier Sans", Font.BOLD, 12));
+                g.drawString(lastWord, 20, 100);
+                g.setFont(new Font("Courier Sans", Font.PLAIN, 12));
+                g.drawString("for a score: " + lastScore, 8, 120);
+
+            }
+        }
     }
 
     class ButtonPanel extends JPanel implements ActionListener {
@@ -284,14 +335,19 @@ public class ScrabblePanel extends JPanel {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource().equals(goButton)) {
                 System.out.println("go button");
+                sp.fixAll();
+                sp.refillRack();
 
             } else if (e.getSource().equals(loseButton)) {
                 System.out.println("lose button");
 
             } else { // resetButton;
                 System.out.println("reset button");
+                sp.putUnfixedBack();
             }
+            sp.scorePanel.repaint();
+//            sp.repaint();
         }
     }
-}
 
+}
