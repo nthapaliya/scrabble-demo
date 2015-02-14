@@ -3,7 +3,7 @@ package wordsearch;
 /**
  * Created by nirajthapaliya on 2/8/15.
  */
-public class Player {
+class Player {
     int[] rack;
     int score;
     char[][] board;

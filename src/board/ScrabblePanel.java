@@ -12,9 +12,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class ScrabblePanel extends JPanel {
-    Tile[][] tiles;
-    Game game;
-    Tile selected;
+    private final Game game;
+    private Tile selected;
 
     public ScrabblePanel() {
         game = new Game("Player 1", "Player 2");
@@ -25,7 +24,7 @@ public class ScrabblePanel extends JPanel {
 
     class Board extends JPanel {
         Board() {
-            tiles = new Tile[15][15];
+            Tile[][] tiles = new Tile[15][15];
             setLayout(new GridLayout(15, 15, 1, 1));
             setBackground(Color.WHITE);
 
@@ -38,120 +37,12 @@ public class ScrabblePanel extends JPanel {
         }
     }
 
-    class SidePanel extends JPanel {
-        SidePanel() {
-            setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-            setBackground(Color.WHITE);
-
-            add(new ScorePanel());
-            add(new Rack());
-            add(new ButtonPanel());
-        }
-    }
-
-    class Rack extends JPanel {
-        int[] playerRack;
-
-        public Rack() {
-            setLayout(new GridLayout(7, 1, 10, 5));
-            setBackground(Color.WHITE);
-            playerRack = new int[26];
-
-            for (int i = 0; i < 7; i++) {
-                char c = game.DrawRandom();
-                playerRack[c-'a']++;
-                add(new RackTile(c));
-            }
-        }
-    }
-
-    class RackTile extends Tile {
-        RackTile(char c) {
-            super(0,0);
-            this.c = c;
-        }
-        public void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            if (isEmpty()) {
-                g.setColor(Color.BLACK);
-                g.fillRoundRect(0, 0, TILE_SIZE - 1, TILE_SIZE - 1, 10, 10);
-                g.setColor(Color.GRAY);
-                g.fillRoundRect(0, 0, TILE_SIZE - 3, TILE_SIZE - 3, 10, 10); //fill in square
-            }
-        }
-    }
-
-    class ScorePanel extends JPanel {
-        ScorePanel() {
-            setPreferredSize(new Dimension(200, 150));
-            setBackground(Color.WHITE);
-        }
-
-        public void paintComponent(Graphics g) {
-            super.paintComponent(g);
-
-            Graphics2D g2d = (Graphics2D) g;
-            g2d.setRenderingHint
-                    (RenderingHints.KEY_TEXT_ANTIALIASING,
-                            RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
-
-            g.setColor(Color.BLACK);
-            g.drawRoundRect(1, 1, 195, 140, 10, 10);
-            g.setFont(new Font("Courier Sans", Font.PLAIN, 12));
-
-            g.drawString("Pieces remaining: " + game.remainingLetters() + " ", 8, 20);
-            g.drawString("Player Score:  " + game.Player1Score(), 8, 40);
-            g.drawString("Comp Score:  " + game.Player2Score(), 8, 60);
-
-            String lastWord = game.LastWord();
-            int lastScore = game.LastScore();
-
-            if (lastWord != null) {
-                g.drawString("Latest word(s) played", 8, 80);
-                g.setFont(new Font("Courier Sans", Font.BOLD, 12));
-                g.drawString(lastWord, 20, 100);
-                g.setFont(new Font("Courier Sans", Font.PLAIN, 12));
-                g.drawString("for a score: " + lastScore, 8, 120);
-
-            }
-        }
-    }
-
-    class ButtonPanel extends JPanel implements ActionListener {
-        JButton goButton, loseButton, reset;
-        ButtonPanel() {
-
-            goButton = new JButton("Go!");
-            loseButton = new JButton("Lose Turn");
-            reset = new JButton("Reset");
-
-            goButton.addActionListener(this);
-            loseButton.addActionListener(this);
-            reset.addActionListener(this);
-
-            add(goButton);
-            add(loseButton);
-            add(reset);
-
-        }
-        public void actionPerformed(ActionEvent e) {
-            if (e.getSource().equals(goButton)) {
-
-            } else if (e.getSource().equals(loseButton)) {
-            } else { // resetButton;
-
-            }
-
-        }
-    }
-
     class Tile extends JPanel {
         final int TILE_SIZE = 45;
+        final Tiles tile;
 
-        Tiles tile;
         private boolean permanent, hover;
-        String[] tileText;
+        final String[] tileText;
         char c;
 
         Tile(int row, int col) {
@@ -194,22 +85,32 @@ public class ScrabblePanel extends JPanel {
             selected = this;
             selected.repaint();
         }
-        void remove(Tile t) {
-            t.c = 0;
-            t.repaint();
+
+        void remove() {
+            c = 0;
+            repaint();
         }
+
         void deselect() {
             Tile t = selected;
             selected = null;
             t.repaint();
         }
-        boolean isEmpty(){ return c ==0; }
-        boolean isSelected() { return selected == this; }
-        boolean isPermanent() { return permanent; }
+
+        boolean isEmpty() {
+            return c == 0;
+        }
+
+        boolean isSelected() {
+            return selected == this;
+        }
+
+        boolean isPermanent() {
+            return permanent;
+        }
 
         void makePermanent() {
             permanent = true;
-            repaint();
         }
 
         public void paintComponent(Graphics g) {
@@ -253,29 +154,144 @@ public class ScrabblePanel extends JPanel {
         }
 
         private class HoverListener extends MouseAdapter {
+
             public void mouseEntered(MouseEvent e) {
                 hover = true;
                 repaint();
             }
+
             public void mouseExited(MouseEvent e) {
                 hover = false;
                 repaint();
             }
+
             public void mousePressed(MouseEvent e) {
                 if (!isPermanent()) {
                     if (isEmpty() && selected != null) {
                         put(selected);
-                        remove(selected);
+                        selected.remove();
                         deselect();
-                    } else if (!isEmpty() && selected == null) {
-                        select();
                     } else if (!isEmpty() && selected != null) {
                         deselect();
-
+                    } else if (!isEmpty()) {
+                        select();
                     }
+                }
+            }
+        }
+    }
+
+    class SidePanel extends JPanel {
+        SidePanel() {
+            setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+            setBackground(Color.WHITE);
+
+            add(new ScorePanel());
+            add(new Rack());
+            add(new ButtonPanel());
+        }
+
+        class ScorePanel extends JPanel {
+            ScorePanel() {
+                setPreferredSize(new Dimension(200, 150));
+                setBackground(Color.WHITE);
+            }
+
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint
+                        (RenderingHints.KEY_TEXT_ANTIALIASING,
+                                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+
+                g.setColor(Color.BLACK);
+                g.drawRoundRect(1, 1, 195, 140, 10, 10);
+                g.setFont(new Font("Courier Sans", Font.PLAIN, 12));
+
+                g.drawString("Pieces remaining: " + game.remainingLetters() + " ", 8, 20);
+                g.drawString("Player Score:  " + game.Player1Score(), 8, 40);
+                g.drawString("Comp Score:  " + game.Player2Score(), 8, 60);
+
+                String lastWord = game.LastWord();
+                int lastScore = game.LastScore();
+
+                if (lastWord != null) {
+                    g.drawString("Latest word(s) played", 8, 80);
+                    g.setFont(new Font("Courier Sans", Font.BOLD, 12));
+                    g.drawString(lastWord, 20, 100);
+                    g.setFont(new Font("Courier Sans", Font.PLAIN, 12));
+                    g.drawString("for a score: " + lastScore, 8, 120);
+
+                }
+            }
+        }
+
+        class Rack extends JPanel {
+            public Rack() {
+                setLayout(new GridLayout(7, 1, 10, 5));
+                setBackground(Color.WHITE);
+
+                for (int i = 0; i < 7; i++) {
+                    char c = game.DrawRandom();
+                    add(new RackTile(c));
+                }
+            }
+
+        }
+
+        class RackTile extends Tile {
+            RackTile(char c) {
+                super(0, 0);
+                this.c = c;
+            }
+
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (isEmpty()) {
+                    g.setColor(Color.BLACK);
+                    g.fillRoundRect(0, 0, TILE_SIZE - 1, TILE_SIZE - 1, 10, 10);
+                    g.setColor(Color.GRAY);
+                    g.fillRoundRect(0, 0, TILE_SIZE - 3, TILE_SIZE - 3, 10, 10);
                 }
             }
         }
 
     }
+
+    class ButtonPanel extends JPanel implements ActionListener {
+        final JButton goButton;
+        final JButton loseButton;
+        final JButton reset;
+
+        ButtonPanel() {
+            setBackground(Color.WHITE);
+            goButton = new JButton("Go!");
+            loseButton = new JButton("Lose Turn");
+            reset = new JButton("Reset");
+
+            goButton.addActionListener(this);
+            loseButton.addActionListener(this);
+            reset.addActionListener(this);
+
+            add(goButton);
+            add(loseButton);
+            add(reset);
+
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource().equals(goButton)) {
+                System.out.println("go button");
+
+            } else if (e.getSource().equals(loseButton)) {
+                System.out.println("lose button");
+
+            } else { // resetButton;
+                System.out.println("reset button");
+            }
+        }
+    }
 }
+

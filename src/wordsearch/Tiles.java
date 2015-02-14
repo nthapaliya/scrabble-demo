@@ -52,7 +52,6 @@ public enum Tiles {
     public String toString() {
         return type;
     }
-
     public int LetterMultiplier() {
         return letterMultiplier;
     }

@@ -3,7 +3,7 @@ package wordsearch;
 /**
  * Created by nirajthapaliya on 2/9/15.
  */
-public class Board {
+class Board {
     char[][] state;
     int[][] crossSets;
 
