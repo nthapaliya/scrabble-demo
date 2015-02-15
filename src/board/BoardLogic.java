@@ -5,16 +5,17 @@ import wordsearch.Game;
 /**
  * Created by nirajthapaliya on 2/13/15.
  */
-class BoardLogic {
+public class BoardLogic{
     final Game game;
     Tile[] rack;
     Tile[][] tiles;
-    Scrabble sp;
+    MainWindow mw;
 
-    BoardLogic(Scrabble sp) {
-        this.sp = sp;
+    public BoardLogic(MainWindow mw) {
         game = new Game("Player 1", "Player 2");
         rack = new Tile[7];
+        tiles = new Tile[15][15];
+        this.mw = mw;
     }
 
     void putUnfixedBackOnRack() {
@@ -70,7 +71,7 @@ class BoardLogic {
     }
 
     void repaint() {
-        sp.repaint();
+        mw.repaint();
     }
 }
 

@@ -18,7 +18,7 @@ public class Tile extends PanelTemplate {
     private final Color LETTER_COLOR = Color.YELLOW.brighter();
     private final Color LETTER_SELECTED = Color.GREEN;
     private final Color LETTER_PERMANENT = Color.ORANGE;
-    private final int TILE_SIZE = 45;
+    private final int TILE_SIZE = 40;
     private final Tiles TILE;
     private final String[] TILE_TEXT;
     private final int[] TILE_TEXT_WIDTH;
@@ -131,8 +131,14 @@ public class Tile extends PanelTemplate {
             if (TILE != Tiles.CENTER_TILE && TILE != Tiles.PLAIN && TILE != Tiles.BLANK) {
                 g.setColor(Color.BLACK);
                 g.setFont(TEXT_FONT);
-                g.drawString(TILE_TEXT[0], (TILE_SIZE - TILE_TEXT_WIDTH[0]) / 2, 20);
-                g.drawString(TILE_TEXT[1], (TILE_SIZE - TILE_TEXT_WIDTH[1]) / 2, 35);
+                int h = getTextHeight(TEXT_FONT);
+                int y1, y2;
+                int c = 6;
+                y1 = (TILE_SIZE - c)/2;
+                y2 = (TILE_SIZE + (2 * h) + c)/2;
+
+                g.drawString(TILE_TEXT[0], (TILE_SIZE - TILE_TEXT_WIDTH[0]) / 2, y1);
+                g.drawString(TILE_TEXT[1], (TILE_SIZE - TILE_TEXT_WIDTH[1]) / 2, y2);
             }
         } else {
             Color color = LETTER_COLOR;
@@ -143,10 +149,6 @@ public class Tile extends PanelTemplate {
             else if (isPermanent()) color = LETTER_PERMANENT;
 
             assert isSelected() != isPermanent();
-
-            // puts in a letter
-//                g.setColor(Color.BLACK);
-//                g.drawRoundRect(0, 0, TILE_SIZE, TILE_SIZE, 10, 10);
 
             g.setColor(color);
             g.fillRoundRect(0, 0, TILE_SIZE, TILE_SIZE, 10, 10); //fill in square
